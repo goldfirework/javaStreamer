@@ -1,15 +1,20 @@
-package fun.jons;
+package fun.jons.handlers;
 
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacv.*;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.opencv_core.IplImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Base64;
+
 public class webCamCapture {
-    public void captureVideo() {
+    public void captureVideo(int device) {
 
         try {
             // Tar i bruk kameraet
-            FrameGrabber grabber = new OpenCVFrameGrabber(0);
+            FrameGrabber grabber = new OpenCVFrameGrabber(device);
             grabber.start();
 
             // Tar et bildet fra kameraet
@@ -28,8 +33,25 @@ public class webCamCapture {
                 // Tar nytt bilde
                 frame = grabber.grab();
 
+                // Lagrer siste bildet
+                IplImage img2 = converter.convert(frame);
+                opencv_imgcodecs.cvSaveImage("bilde.jpg", img2);
+
+                try {
+
+                    // Gjør bildet om til bytes.
+                    byte[] fileContent = FileUtils.readFileToByteArray(new File("bilde.jpg"));
+
+                    // Sender bytes ut til serveren
+                    new fun.jons.sockets.streamer().streamData("localhost", 6666, fileContent);
+                    new fun.jons.sockets.streamer().streamData("localhost", 6667, fileContent);
+
+                } catch (Exception e) {
+                    System.out.println("Error i konverteringen til Base64: \n" + e.toString());
+                }
+
                 // Viser siste bildet
-                canvas.showImage(frame);
+                // canvas.showImage(frame);
             }
 
 

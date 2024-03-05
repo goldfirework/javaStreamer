@@ -5,7 +5,7 @@ import java.net.*;
 
 public class streamer {
 
-    public void streamData(String adress, int port, String data) {
+    public void streamData(String adress, int port, byte[] data) {
         try{
             // Etablerer tilkobling
             Socket s=new Socket(adress,port);
@@ -14,7 +14,8 @@ public class streamer {
             DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 
             // Skriver data som skal sendes
-            dout.writeUTF(data);
+            //dout.writeUTF(data);
+            dout.write(data);
 
             // Sender dataen
             dout.flush();
