@@ -1,14 +1,25 @@
 package fun.jons;
 
+import fun.jons.handlers.RTMPVideoStreamer;
 import fun.jons.handlers.webCamCapture;
 
 public class Main {
 
     // Første argumentet må være device nummeret :)
+    // Andre må være adressen
+    // Tredje er porten
     public static void main(String[] args) {
         //System.out.println("Hello world! " + args[0]);
 
         // Starter videocapture
-        new webCamCapture().captureVideo(Integer.parseInt(args[0]));
+        //new webCamCapture().captureVideo(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
+
+        try {
+            RTMPVideoStreamer streamer = new RTMPVideoStreamer("rtmp://185.7.192.45:1935/live/obs", 0);
+            streamer.streamToRTMP();
+        }catch (Exception e) {
+            System.out.println("Fikk feil i å streame ut gitt.");
+            System.out.println(e.toString());
+        }
     }
 }

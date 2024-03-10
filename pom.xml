@@ -40,6 +40,9 @@
         </plugins>
     </build>
 
+    <repositories>
+    </repositories>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
         <dependency>
